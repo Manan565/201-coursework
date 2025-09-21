@@ -1,0 +1,28 @@
+
+#define _POSIX_C_SOURCE 200809L
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define _GNU_SOURCE
+int main() {
+
+  char *line;
+  ssize_t read;
+  size_t len;
+  char *saveptr;
+  read = getline(&line, &len, stdin);
+
+  char *token;
+  char dest[1000];
+  token = strtok_r(line, " ", &saveptr);
+  while (token != NULL) {
+    token = strtok_r(NULL, " ", &saveptr);
+    if (strcmp(token, "\n") != 0) {
+      strcat(dest, token);
+    }
+    printf(" %s\n", dest);
+  }
+
+  free(line);
+  return 0;
+}

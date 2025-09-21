@@ -1,0 +1,42 @@
+
+#define _POSIX_C_SOURCE 200809L
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#define _GNU_SOURCE
+int main() {
+
+  char *line;
+  ssize_t read;
+  size_t len;
+  char *saveptr;
+  while(1){
+  read = getline(&line, &len, stdin);
+
+  char *token;
+  char dest[1000] = "";
+  token = strtok_r(line, " ", &saveptr);
+  while (token != NULL) {
+    strcat(dest, token);
+    strcat(dest," ");
+    token = strtok_r(NULL, " ", &saveptr);
+  }
+
+  pid_t child_pid = fork();
+
+if (child_pid == 0) {
+    // Child process
+    execl(dest, dest, NULL);
+} else {
+    // Parent process
+    int status;
+    waitpid(child_pid, &status, 0);  // Wait for THIS specific child
+}
+  strcpy(dest,"");
+  free(token);
+  free(saveptr);
+  free(line);}
+  return 0;
+}
